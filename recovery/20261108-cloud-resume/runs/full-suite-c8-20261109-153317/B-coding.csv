@@ -1,0 +1,5 @@
+isl,osl,hit,c,nreq,out_tps,ttft_p50,tpot_p50,ttft_p99,tpot_p99,total_tps,success,accept,ttft_t1,ttft_tn,ds,rate,slo_ttft,slo_tpot,slo_pct,good_tps,goodput
+737,1000,95.7,1,4,59.14,272.81,16.007,279.31,18.965,102.71,100.0,5.69,,,custom:/home/aaron/bench/fixtures/custom/coding_prompts.jsonl,,3000.0,50.0,100.0,59.14,0.059
+737,1000,71.7,2,8,100.08,433.5,18.379,593.93,24.44,173.85,100.0,5.78,,,custom:/home/aaron/bench/fixtures/custom/coding_prompts.jsonl,,3000.0,50.0,100.0,100.08,0.1
+738,1000,89.6,4,16,204.08,760.57,18.44,966.07,20.194,354.66,100.0,5.97,,,custom:/home/aaron/bench/fixtures/custom/coding_prompts.jsonl,,3000.0,50.0,100.0,204.08,0.204
+738,1000,95.5,8,32,296.25,993.35,22.785,1024.88,37.562,514.98,100.0,5.75,,,custom:/home/aaron/bench/fixtures/custom/coding_prompts.jsonl,,3000.0,50.0,100.0,296.25,0.296

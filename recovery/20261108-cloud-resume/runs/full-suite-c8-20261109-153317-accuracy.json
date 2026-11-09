@@ -1,0 +1,247 @@
+{
+ "acc_set": "ardelva-qc-v1",
+ "acc_n": 40,
+ "acc_pct": 100.0,
+ "detail": [
+  {
+   "q": "Compute 2465 * 30 + 2756.",
+   "gold": "76706",
+   "got": "76706",
+   "ok": true
+  },
+  {
+   "q": "Compute 3671 * 36 + 2288.",
+   "gold": "134444",
+   "got": "134444",
+   "ok": true
+  },
+  {
+   "q": "Compute 1895 * 79 + 4260.",
+   "gold": "153965",
+   "got": "153965",
+   "ok": true
+  },
+  {
+   "q": "Compute 9678 * 77 + 1974.",
+   "gold": "747180",
+   "got": "747180",
+   "ok": true
+  },
+  {
+   "q": "Compute 3921 * 69 + 3201.",
+   "gold": "273750",
+   "got": "273750",
+   "ok": true
+  },
+  {
+   "q": "Compute 6324 * 94 + 8309.",
+   "gold": "602765",
+   "got": "602765",
+   "ok": true
+  },
+  {
+   "q": "Compute 3935 * 52 + 5357.",
+   "gold": "209977",
+   "got": "209977",
+   "ok": true
+  },
+  {
+   "q": "Compute 8452 * 55 + 7530.",
+   "gold": "472390",
+   "got": "472390",
+   "ok": true
+  },
+  {
+   "q": "Compute 4359 * 43 + 8756.",
+   "gold": "196193",
+   "got": "196193",
+   "ok": true
+  },
+  {
+   "q": "Compute 2922 * 15 + 1310.",
+   "gold": "45140",
+   "got": "45140",
+   "ok": true
+  },
+  {
+   "q": "Compute 6103 * 39 + 8665.",
+   "gold": "246682",
+   "got": "246682",
+   "ok": true
+  },
+  {
+   "q": "Compute 8908 * 41 + 1956.",
+   "gold": "367184",
+   "got": "367184",
+   "ok": true
+  },
+  {
+   "q": "A warehouse has 243 boxes and each box holds 29 parts. 91 parts are shipped out. How many parts remain in the warehouse?",
+   "gold": "6956",
+   "got": "6956",
+   "ok": true
+  },
+  {
+   "q": "A warehouse has 83 boxes and each box holds 37 parts. 182 parts are shipped out. How many parts remain in the warehouse?",
+   "gold": "2889",
+   "got": "2889",
+   "ok": true
+  },
+  {
+   "q": "A warehouse has 140 boxes and each box holds 43 parts. 340 parts are shipped out. How many parts remain in the warehouse",
+   "gold": "5680",
+   "got": "5680",
+   "ok": true
+  },
+  {
+   "q": "A warehouse has 174 boxes and each box holds 8 parts. 641 parts are shipped out. How many parts remain in the warehouse?",
+   "gold": "751",
+   "got": "751",
+   "ok": true
+  },
+  {
+   "q": "A warehouse has 95 boxes and each box holds 27 parts. 265 parts are shipped out. How many parts remain in the warehouse?",
+   "gold": "2300",
+   "got": "2300",
+   "ok": true
+  },
+  {
+   "q": "A warehouse has 262 boxes and each box holds 20 parts. 819 parts are shipped out. How many parts remain in the warehouse",
+   "gold": "4421",
+   "got": "4421",
+   "ok": true
+  },
+  {
+   "q": "A warehouse has 285 boxes and each box holds 7 parts. 713 parts are shipped out. How many parts remain in the warehouse?",
+   "gold": "1282",
+   "got": "1282",
+   "ok": true
+  },
+  {
+   "q": "A warehouse has 343 boxes and each box holds 37 parts. 219 parts are shipped out. How many parts remain in the warehouse",
+   "gold": "12472",
+   "got": "12472",
+   "ok": true
+  },
+  {
+   "q": "What does this Python code print?\n```python\nxs = [24, 26, 2, 27, 27, 5, 28, 17]\nprint(sum(x * x for x in xs if x % 2 == ",
+   "gold": "2040",
+   "got": "2040",
+   "ok": true
+  },
+  {
+   "q": "What does this Python code print?\n```python\nxs = [4, 23, 13, 4, 23, 17, 4, 20]\nprint(sum(x * x for x in xs if x % 2 == 0",
+   "gold": "448",
+   "got": "448",
+   "ok": true
+  },
+  {
+   "q": "What does this Python code print?\n```python\nxs = [12, 30, 21, 5, 6, 21, 11, 29]\nprint(sum(x * x for x in xs if x % 2 == ",
+   "gold": "1080",
+   "got": "1080",
+   "ok": true
+  },
+  {
+   "q": "What does this Python code print?\n```python\nxs = [2, 27, 2, 7, 6, 30, 17, 14]\nprint(sum(x * x for x in xs if x % 2 == 0)",
+   "gold": "1140",
+   "got": "1140",
+   "ok": true
+  },
+  {
+   "q": "What does this Python code print?\n```python\nr = 1\nfor i in range(1, 8 + 1):\n    r = r * i % 1000\nprint(r)\n```",
+   "gold": "320",
+   "got": "320",
+   "ok": true
+  },
+  {
+   "q": "What does this Python code print?\n```python\nr = 1\nfor i in range(1, 13 + 1):\n    r = r * i % 1000\nprint(r)\n```",
+   "gold": "800",
+   "got": "800",
+   "ok": true
+  },
+  {
+   "q": "What does this Python code print?\n```python\nr = 1\nfor i in range(1, 12 + 1):\n    r = r * i % 1000\nprint(r)\n```",
+   "gold": "600",
+   "got": "600",
+   "ok": true
+  },
+  {
+   "q": "What does this Python code print?\n```python\nr = 1\nfor i in range(1, 20 + 1):\n    r = r * i % 1000\nprint(r)\n```",
+   "gold": "0",
+   "got": "0",
+   "ok": true
+  },
+  {
+   "q": "Sort these integers in ascending order and give them comma-separated: 54, 104, 168, 193, 120, 152, 65, 185, -25.",
+   "gold": "-25,54,65,104,120,152,168,185,193",
+   "got": "-25,54,65,104,120,152,168,185,193",
+   "ok": true
+  },
+  {
+   "q": "Sort these integers in ascending order and give them comma-separated: -12, 2, 93, 141, -31, 105, 125, 128, 84.",
+   "gold": "-31,-12,2,84,93,105,125,128,141",
+   "got": "-31,-12,2,84,93,105,125,128,141",
+   "ok": true
+  },
+  {
+   "q": "Sort these integers in ascending order and give them comma-separated: 110, 192, 0, 80, 8, -60, 118, 119, 117.",
+   "gold": "-60,0,8,80,110,117,118,119,192",
+   "got": "-60,0,8,80,110,117,118,119,192",
+   "ok": true
+  },
+  {
+   "q": "Sort these integers in ascending order and give them comma-separated: 62, 27, 80, 28, 113, 148, 170, -43, 38.",
+   "gold": "-43,27,28,38,62,80,113,148,170",
+   "got": "-43,27,28,38,62,80,113,148,170",
+   "ok": true
+  },
+  {
+   "q": "Sort these integers in ascending order and give them comma-separated: -60, 149, 40, 196, 166, 29, 125, -37, 189.",
+   "gold": "-60,-37,29,40,125,149,166,189,196",
+   "got": "-60,-37,29,40,125,149,166,189,196",
+   "ok": true
+  },
+  {
+   "q": "Sort these integers in ascending order and give them comma-separated: 57, 160, -21, 147, 40, 139, 136, -13, 163.",
+   "gold": "-21,-13,40,57,136,139,147,160,163",
+   "got": "-21,-13,40,57,136,139,147,160,163",
+   "ok": true
+  },
+  {
+   "q": "How many times does the letter \"e\" appear in the string \"tentensel\"?",
+   "gold": "3",
+   "got": "3",
+   "ok": true
+  },
+  {
+   "q": "How many times does the letter \"o\" appear in the string \"modorselsel\"?",
+   "gold": "2",
+   "got": "2",
+   "ok": true
+  },
+  {
+   "q": "How many times does the letter \"v\" appear in the string \"vertenlis\"?",
+   "gold": "1",
+   "got": "1",
+   "ok": true
+  },
+  {
+   "q": "How many times does the letter \"a\" appear in the string \"verdorraten\"?",
+   "gold": "1",
+   "got": "1",
+   "ok": true
+  },
+  {
+   "q": "How many times does the letter \"l\" appear in the string \"raselmotenver\"?",
+   "gold": "1",
+   "got": "1",
+   "ok": true
+  },
+  {
+   "q": "How many times does the letter \"a\" appear in the string \"quaquatenten\"?",
+   "gold": "2",
+   "got": "2",
+   "ok": true
+  }
+ ]
+}

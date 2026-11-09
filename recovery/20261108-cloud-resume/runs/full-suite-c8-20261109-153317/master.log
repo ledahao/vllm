@@ -1,0 +1,24 @@
+==== PHASE F-accuracy start 2026-11-09T07:33:17+00:00 ====
+==== PHASE F-accuracy end rc=0 2026-11-09T07:33:52+00:00 ====
+==== PHASE gradient start 2026-11-09T07:33:52+00:00 ====
+==== PHASE gradient end rc=0 2026-11-09T08:07:52+00:00 ====
+==== PHASE A-realtext start 2026-11-09T08:07:52+00:00 ====
+==== PHASE A-realtext end rc=3 2026-11-09T08:10:56+00:00 ====
+==== PHASE B-coding start 2026-11-09T08:10:56+00:00 ====
+==== PHASE B-coding end rc=3 2026-11-09T08:11:11+00:00 ====
+==== PHASE C-think start 2026-11-09T08:11:11+00:00 ====
+==== PHASE C-think end rc=3 2026-11-09T08:11:25+00:00 ====
+==== PHASE D-multiturn start 2026-11-09T08:11:25+00:00 ====
+==== PHASE D-multiturn end rc=3 2026-11-09T08:11:27+00:00 ====
+==== PHASE E-rate start 2026-11-09T08:11:27+00:00 ====
+==== PHASE E-rate end rc=0 2026-11-09T08:31:29+00:00 ====
+FULL_SUITE_DONE rc=1 out=/home/aaron/bench/out/full-suite-c8-20261109-153317
+==== RETRY PHASE A-realtext start 2026-11-09T08:34:36+00:00 ====
+==== RETRY PHASE A-realtext end rc=0 2026-11-09T09:04:10+00:00 ====
+==== RETRY PHASE B-coding start 2026-11-09T09:04:10+00:00 ====
+==== RETRY PHASE B-coding end rc=0 2026-11-09T09:13:24+00:00 ====
+==== RETRY PHASE C-think start 2026-11-09T09:13:24+00:00 ====
+==== RETRY PHASE C-think end rc=0 2026-11-09T09:45:32+00:00 ====
+==== RETRY PHASE D-multiturn start 2026-11-09T09:45:32+00:00 ====
+==== RETRY PHASE D-multiturn end rc=0 2026-11-09T10:24:11+00:00 ====
+RETRY_ABCD_DONE rc=0
