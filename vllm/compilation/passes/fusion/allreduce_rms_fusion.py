@@ -124,14 +124,6 @@ FI_ALLREDUCE_FUSION_MAX_SIZE_MB: dict[int, dict[int, float]] = {
         4: 64,  # 64MB
         8: 2,  # 2MB
     },
-    # sm_120 has no entry above, so TP4 was rejected as an unsupported world
-    # size even though the kernel dispatches 2/4/6/8/16 ranks. 160MB is one
-    # 16384 x 5120 bf16 chunk, the prefill width these GPUs actually reduce.
-    120: {
-        2: 64,  # 64MB
-        4: 160,  # 160MB
-        8: 8,  # 8MB
-    },
 }
 
 # Max size of the input tensor per world size per device capability
@@ -154,12 +146,6 @@ _FI_ALLREDUCE_ONE_SHOT_MAX_SIZES_MB: dict[int, dict[int, float]] = {
         8: 2,  # 2MB
     },
     107: {
-        2: 32,  # 32MB
-        4: 4,  # 4MB
-        8: 2,  # 2MB
-    },
-    # One-shot stays small on PCIe sm_120. Larger tensors use two-shot.
-    120: {
         2: 32,  # 32MB
         4: 4,  # 4MB
         8: 2,  # 2MB
