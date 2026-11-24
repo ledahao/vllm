@@ -124,6 +124,13 @@ FI_ALLREDUCE_FUSION_MAX_SIZE_MB: dict[int, dict[int, float]] = {
         4: 64,  # 64MB
         8: 2,  # 2MB
     },
+    # PCIe Blackwell. A 160MB TP4 budget raised cold 3K TTFT from 474ms to
+    # 2198ms, so this matches the sm_90 cutoff and leaves big chunks on NCCL.
+    120: {
+        2: 64,  # 64MB
+        4: 2,  # 2MB
+        8: 0.5,  # 0.5MB
+    },
 }
 
 # Max size of the input tensor per world size per device capability
@@ -149,6 +156,11 @@ _FI_ALLREDUCE_ONE_SHOT_MAX_SIZES_MB: dict[int, dict[int, float]] = {
         2: 32,  # 32MB
         4: 4,  # 4MB
         8: 2,  # 2MB
+    },
+    120: {
+        2: 32,  # 32MB
+        4: 2,  # 2MB
+        8: 0.5,  # 0.5MB
     },
 }
 
