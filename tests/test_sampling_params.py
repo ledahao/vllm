@@ -273,6 +273,26 @@ def test_extra_args_accepts_messagepack_integer_boundaries(value):
     assert SamplingParams(extra_args=extra_args).extra_args == extra_args
 
 
+def test_ignore_eos_masks_eos_logits_and_trace_replay_can_clear_it():
+    params = SamplingParams(ignore_eos=True, logit_bias={3: 1.5})
+    params.update_from_generation_config({"eos_token_id": [2, 4]}, eos_token_id=2)
+    assert params.eos_token_id is None
+    assert params.logit_bias[2] == -1.0e10
+    assert params.logit_bias[4] == -1.0e10
+    assert params.logit_bias[3] == 1.5
+    assert 2 not in (params.stop_token_ids or [])
+    assert 4 not in (params.stop_token_ids or [])
+    params._clear_ignored_eos_mask()
+    assert 2 not in params.logit_bias
+    assert 4 not in params.logit_bias
+    assert params.logit_bias[3] == 1.5
+
+    plain = SamplingParams()
+    plain.update_from_generation_config({"eos_token_id": 2}, eos_token_id=2)
+    assert plain.logit_bias is None
+    assert plain.eos_token_id == 2
+
+
 def test_extra_args_preserves_custom_objects_and_shared_containers():
     custom = object()
     shared = [custom, (None, "value", 1.5)]

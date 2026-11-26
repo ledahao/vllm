@@ -28,6 +28,10 @@ logger = init_logger(__name__)
 
 _SAMPLING_EPS = 1e-5
 _MAX_TEMP = 1e-2
+# Finite stand-in for -inf. Msgpack and the logit-bias kernel both carry a
+# float, and this is far below any real logit so greedy and random sampling
+# never select the token.
+_IGNORE_EOS_LOGIT = -1.0e10
 
 MAX_LOGPROB_TOKEN_IDS = 128
 """Upper bound on `SamplingParams.logprob_token_ids` list length. Must match
@@ -398,6 +402,9 @@ class SamplingParams(
     output_text_buffer_length: int = 0
     _eos_token_id: int | None = None
     _all_stop_token_ids: set[int] = msgspec.field(default_factory=set)
+    # EOS ids whose logits were forced to _IGNORE_EOS_LOGIT because ignore_eos
+    # is set. Cleared for trace replay, which must be able to emit EOS.
+    _ignored_eos_masked_ids: set[int] = msgspec.field(default_factory=set)
     _watermarking_skipped: bool = False
 
     # Fields used to construct logits processors
@@ -769,12 +776,44 @@ class SamplingParams(
                 f"n must be 1 when using greedy sampling, got {self.n}."
             )
 
+    def _mask_ignored_eos(self, token_ids: set[int]) -> None:
+        """Force EOS logits so ignore_eos cannot sample them.
+
+        ``ignore_eos`` only removes EOS from the stop set. The sampler can
+        still draw it, and with special tokens skipped that draw is invisible
+        while still consuming the output budget.
+        """
+        if not token_ids:
+            return
+        bias = dict(self.logit_bias or {})
+        masked: set[int] = set()
+        for tid in token_ids:
+            bias[int(tid)] = _IGNORE_EOS_LOGIT
+            masked.add(int(tid))
+        self.logit_bias = bias
+        self._ignored_eos_masked_ids = masked
+
+    def _clear_ignored_eos_mask(self) -> None:
+        """Undo :meth:`_mask_ignored_eos`. Trace replay needs real EOS logits."""
+        masked = self._ignored_eos_masked_ids
+        if masked and self.logit_bias:
+            for tid in list(masked):
+                if self.logit_bias.get(tid) == _IGNORE_EOS_LOGIT:
+                    del self.logit_bias[tid]
+            if not self.logit_bias:
+                self.logit_bias = None
+        if masked:
+            self._ignored_eos_masked_ids = set()
+
     def update_from_generation_config(
         self,
         generation_config: dict[str, Any],
         eos_token_id: int | None = None,
     ) -> None:
         """Update if there are non-default values from generation_config."""
+        # Drop a mask left on a reused params object before applying this
+        # generation config.
+        self._clear_ignored_eos_mask()
         if not self.ignore_eos:
             self._eos_token_id = eos_token_id
 
@@ -782,6 +821,10 @@ class SamplingParams(
             # Add the eos token id into the sampling_params to support
             # min_tokens processing.
             self._all_stop_token_ids.add(eos_token_id)
+
+        masked_eos: set[int] = set()
+        if self.ignore_eos and eos_token_id is not None:
+            masked_eos.add(int(eos_token_id))
 
         # Update eos_token_id for generation
         if (eos_ids := generation_config.get("eos_token_id")) is not None:
@@ -792,12 +835,19 @@ class SamplingParams(
                 # stop_token_ids since it's handled separately for stopping
                 # purposes.
                 eos_ids.discard(eos_token_id)
+            if self.ignore_eos:
+                masked_eos.update(int(tid) for tid in eos_ids)
             if eos_ids:
                 self._all_stop_token_ids.update(eos_ids)
                 if not self.ignore_eos:
                     assert self.stop_token_ids is not None
                     eos_ids.update(self.stop_token_ids)
                     self.stop_token_ids = list(eos_ids)
+
+        if self.ignore_eos:
+            # Leaving EOS unmasked lets ignore_eos requests spend their
+            # output budget on invisible EOS tokens.
+            self._mask_ignored_eos(masked_eos)
 
     def update_from_tokenizer(self, tokenizer: TokenizerLike) -> None:
         if not self.bad_words:

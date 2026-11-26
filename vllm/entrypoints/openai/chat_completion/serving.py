@@ -523,6 +523,12 @@ class OpenAIServingChat(GenerateBaseServing):
         )
 
         last_res: RequestOutput | None = None
+        # Role rides on the first chunk that carries a generated token.
+        # An earlier empty role packet is what a client stamps as TTFT, so
+        # the wait for the real token is then counted as an inter-token gap.
+        pending_role: list[str | None] = [None] * num_choices
+        held_prompt_token_ids: list[int] | None = None
+        held_prompt_text: str | None = None
         try:
             async for res in result_generator:
                 last_res = res
@@ -543,50 +549,11 @@ class OpenAIServingChat(GenerateBaseServing):
 
                     # ``res.prompt`` is the rendered chat-templated prompt
                     prompt_text = res.prompt if request.return_prompt_text else None
-
-                    # NOTE num_choices defaults to 1 so this usually executes
-                    # once per request
-                    for i in range(num_choices):
-                        choice_data = ChatCompletionResponseStreamChoice(
-                            index=i,
-                            delta=DeltaMessage(
-                                role=role,
-                                content="",
-                            ),
-                            logprobs=None,
-                            finish_reason=None,
-                        )
-
-                        # return prompt_token_ids at the first chunk ever
-                        chunk = ChatCompletionStreamResponse(
-                            id=request_id,
-                            object=chunk_object_type,
-                            created=created_time,
-                            choices=[choice_data],
-                            model=model_name,
-                            prompt_token_ids=(
-                                res.prompt_token_ids
-                                if request.return_token_ids
-                                else None
-                            ),
-                            prompt_text=prompt_text,
-                        )
-
-                        # if continuous usage stats are requested, add it
-                        if include_continuous_usage:
-                            chunk.usage = UsageInfo(
-                                prompt_tokens=num_prompt_tokens,
-                                completion_tokens=0,
-                                total_tokens=num_prompt_tokens,
-                                completion_tokens_details=(
-                                    _make_completion_tokens_details(0)
-                                    if self._include_reasoning_tokens_details
-                                    else None
-                                ),
-                            )
-
-                        data = chunk.model_dump_json(exclude_unset=True)
-                        yield f"data: {data}\n\n"
+                    pending_role = [role] * num_choices
+                    held_prompt_token_ids = (
+                        res.prompt_token_ids if request.return_token_ids else None
+                    )
+                    held_prompt_text = prompt_text
 
                     # Send response to echo the input portion of the
                     # last message
@@ -792,12 +759,33 @@ class OpenAIServingChat(GenerateBaseServing):
                         finish_reason_sent[i] = True
 
                     choice_data = maybe_filter_parallel_tool_calls(choice_data, request)
+                    if pending_role[i] is not None:
+                        role_now = pending_role[i]
+                        pending_role[i] = None
+                        delta = choice_data.delta
+                        choice_data.delta = (
+                            DeltaMessage(role=role_now)
+                            if delta is None
+                            else delta.model_copy(update={"role": role_now})
+                        )
+                    prefix: dict[str, Any] = {}
+                    if (
+                        held_prompt_token_ids is not None
+                        or held_prompt_text is not None
+                    ):
+                        prefix = {
+                            "prompt_token_ids": held_prompt_token_ids,
+                            "prompt_text": held_prompt_text,
+                        }
+                        held_prompt_token_ids = None
+                        held_prompt_text = None
                     chunk = ChatCompletionStreamResponse(
                         id=request_id,
                         object=chunk_object_type,
                         created=created_time,
                         choices=[choice_data],
                         model=model_name,
+                        **prefix,
                     )
                     # Stamp the fingerprint on terminal chunks only (those with
                     # finish_reason set). When ``include_usage`` is on, the
@@ -828,6 +816,31 @@ class OpenAIServingChat(GenerateBaseServing):
 
                     data = chunk.model_dump_json(exclude_unset=True)
                     yield f"data: {data}\n\n"
+
+            # No generated token. Still name the role once.
+            for i, role_now in enumerate(pending_role):
+                if role_now is None:
+                    continue
+                pending_role[i] = None
+                choice_data = ChatCompletionResponseStreamChoice(
+                    index=i,
+                    delta=DeltaMessage(role=role_now),
+                    logprobs=None,
+                    finish_reason=None,
+                )
+                chunk = ChatCompletionStreamResponse(
+                    id=request_id,
+                    object=chunk_object_type,
+                    created=created_time,
+                    choices=[choice_data],
+                    model=model_name,
+                    prompt_token_ids=held_prompt_token_ids,
+                    prompt_text=held_prompt_text,
+                )
+                held_prompt_token_ids = None
+                held_prompt_text = None
+                data = chunk.model_dump_json(exclude_unset=True)
+                yield f"data: {data}\n\n"
 
             if self._include_reasoning_tokens_details and not include_continuous_usage:
                 for i, parser in enumerate(parsers):

@@ -33,6 +33,7 @@ from vllm.utils.async_utils import make_async
 from vllm.utils.diffusion import validate_diffusion_sampling_params
 from vllm.utils.jsontree import json_iter_leaves
 from vllm.v1.engine import EngineCoreRequest
+from vllm.v1.engine.cache_only import validate_dsv41_cache_only_request
 from vllm.v1.kv_hints import KvHintsEnvelope
 
 logger = init_logger(__name__)
@@ -274,6 +275,8 @@ class InputProcessor:
         sampling_params.stop = []
         sampling_params.stop_token_ids = []
         sampling_params._all_stop_token_ids = set()
+        # Trace replay must reproduce EOS tokens that were in the trace.
+        sampling_params._clear_ignored_eos_mask()
 
     def _validate_lora(self, lora_request: LoRARequest | None) -> None:
         if lora_request is None:
@@ -534,6 +537,11 @@ class InputProcessor:
                         mm_hash=base_mm_hash,
                     )
                 )
+
+        if self.vllm_config.is_dsv41_encoder_only_prefill:
+            validate_dsv41_cache_only_request(
+                sampling_params, pooling_params, bool(mm_features)
+            )
 
         return EngineCoreRequest(
             request_id=request_id,
